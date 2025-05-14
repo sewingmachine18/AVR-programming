@@ -48,5 +48,5 @@ F1:
 	lsl A 				;take the LSB to bit 1
 OUTPUT:
 	or A,AN				;Create output
-	out PORTB,A			;Show result
+	out PORTC,A			;Show result
 	rjmp READ1			;read input again
