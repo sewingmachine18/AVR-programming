@@ -10,14 +10,14 @@
 .cseg
 .org 0
     
-    
-reset:			    ;Init Stack Pointer
+;Init the stack
+reset:			    
     ldi r24, LOW(RAMEND)
     out SPL, r24    
     ldi r24, HIGH(RAMEND)
     out SPH, r24
     
-    ldi r24, LOW(F1)
+    ldi r24, LOW(F1)	    ;for the delay
     ldi r25, HIGH(F1)
     
 start:
@@ -27,18 +27,18 @@ start:
     ldi train, 1	    ;init the output reg
     
 R2L:
-    OUT PORTD, train
+    OUT PORTD, train	    ;show output
+    rcall delay_outer	    ;3s delay
     rcall delay_outer
     rcall delay_outer
+    lsl train		    ;shift to the left
+    brcc R2L		    ;if carry not zero keep it up
+    rcall delay_outer	    ;delay 2s more is at edge
     rcall delay_outer
-    lsl train
-    brcc R2L
-    rcall delay_outer
-    rcall delay_outer
-    ldi train, 0b01000000
+    ldi train, 0b01000000   ;load next led for output
     
 L2R:
-    OUT PORTD, train
+    OUT PORTD, train	    ;likewise 
     rcall delay_outer
     rcall delay_outer
     rcall delay_outer
@@ -50,7 +50,8 @@ L2R:
     rjmp R2L
 
 
-delay_inner:
+;subroutine for delay (993 cycles)
+delay_inner:	    
     ldi r23, 247
 loop1:
     dec r23
@@ -59,6 +60,7 @@ loop1:
     nop
     ret
     
+;main routine for delay (1000*F1+14 cycles)
 delay_outer:
     push r24
     push r25
