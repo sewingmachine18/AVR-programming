@@ -13,7 +13,7 @@
 ;F0 = (A'*B + C*D')
 ;F1 = (A+D')*(B+C') =(A*B)+(A*C')+(D'*B)+(D'C')
 ;Init PORTC as output
-    ldi temp,0b00000011 ;the 2 LSB of PORTC are for the outputs F0,F1    
+    ser temp ;the 2 LSB of PORTC are for the outputs F0,F1    
     out DDRC, temp			;make PORTC the output port
    
 ;Read A,B,C,D from the 4 LSB of PORTB 
@@ -23,6 +23,7 @@
     out PORTB,temp		;pull-up PORTB
 READ1:  
 	in temp,PINB
+	com temp 		;take the complement of input because the buttons are normally closed
 	mov AN,temp 		;A's complement in LSB of AN
 	com AN
 	mov A,temp 			;A in LSB of A
