@@ -32,7 +32,7 @@ R2L:
     rcall delay_outer
     rcall delay_outer
     lsl train		    ;shift to the left
-    brcc R2L		    ;if carry not zero keep it up
+    brcc R2L		    ;if carry not zero,we are at the left edge
     rcall delay_outer	    ;delay 2s more is at edge
     rcall delay_outer
     ldi train, 0b01000000   ;load next led for output
