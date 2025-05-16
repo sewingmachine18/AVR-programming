@@ -21,7 +21,7 @@ reset:
     ldi r25, HIGH(F1)
     
 start:
-    ser r23		    ;set train = 11111111
+    ser r23		    ;set r23 = 11111111
     out DDRD, r23	    ;set portD as output
     
     ldi train, 1	    ;init the output reg
