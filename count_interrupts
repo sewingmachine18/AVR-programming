@@ -41,14 +41,14 @@ reset:
     
     
 main:
-    in r24,PIND
+    in PIND,r24
     andi r24,0b00100000 
     cpi r24,0
     brne main
     cli
     
 hold:
-    in r24,PIND
+    in PIND,r24
     andi r24,0b00100000 
     cpi r24,0
     breq hold
@@ -72,7 +72,7 @@ isr1:
 light:
     out PORTC,counter		  ;show number
     
-    ;Delay 500 mS
+    ;Delay 300 mS
     ldi r24, low(16*300)	  ;Init r25, r24 for delay 300 mS
     ldi r25, high(16*300)	  ;CPU frequency = 16 MHz
 delay1:
