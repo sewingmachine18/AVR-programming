@@ -20,7 +20,7 @@ ISR(INT1_vect) // External INT1 ISR
         PORTB = 0x0F;
     }
     else{
-        PORTB =0x08;
+        PORTB = 0x08;
     }
     
     counter = 5000;
@@ -52,6 +52,7 @@ int main(int argc, char** argv) {
         
         while(counter>0){
             counter-- ;
+            _delay_ms(1);
             if(counter==4500)
                 PORTB = 0x08;
         }
