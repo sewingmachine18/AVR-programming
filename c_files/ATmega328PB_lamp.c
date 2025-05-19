@@ -12,7 +12,8 @@
 #include<avr/interrupt.h>
 #include<util/delay.h>
 
-int counter = 0;
+volatile int counter = 0;
+
 ISR(INT1_vect) // External INT1 ISR
 {
     if(counter!=0){
