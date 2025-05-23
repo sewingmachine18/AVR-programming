@@ -41,17 +41,20 @@ reset:
     
     
 main:
-    in PIND,r24
+    in r24,PIND
     andi r24,0b00100000 
     cpi r24,0
     brne main
     cli
     
 hold:
-    in PIND,r24
+    in r24,PIND
     andi r24,0b00100000 
     cpi r24,0
     breq hold
+    
+    ldi r24,(1 << INTF1)
+    out EIFR, r24		  ;clear external interrupt flag
     sei
     rjmp main 			  ;wait for interrupts
  
