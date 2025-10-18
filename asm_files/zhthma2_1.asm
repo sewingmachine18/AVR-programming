@@ -99,7 +99,7 @@ debounce:
     brne debounce
   
     ;main isr
-    in temp, PORTD
+    in temp, PIND
     andi temp, 2    ;get PD1
     brne light	    ;if pd1==1 dont inc the int_counter
     
