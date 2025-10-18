@@ -15,14 +15,14 @@ ISR(INT1_vect){
     do{
         EIFR = (1<<INT1);
         _delay_ms(5);
-    }while((EIFR & (1<<INT1)) != 0)
+    }while((EIFR & (1<<INT1)) != 0);
     
     if(count != 0)
         PORTB = 0x3F;
     else
         PORTB = 0x8;
     
-    count == 4000;
+    count = 4000;
     
 }
     
