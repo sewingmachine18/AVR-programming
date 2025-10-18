@@ -100,13 +100,13 @@ debounce:
   
     ;main isr
     in temp, PORTD
-    andi temp, 1    ;get PD1
+    andi temp, 2    ;get PD1
     brne light	    ;if pd1==1 dont inc the int_counter
     
     inc int_cnt
     cpi int_cnt, 32
     brne light
-    clr temp
+    clr int_cnt
 
 light:
     out PORTC, int_cnt
