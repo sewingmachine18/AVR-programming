@@ -109,7 +109,9 @@ debounce:
     clr int_cnt
 
 light:
-    out PORTC, int_cnt
+	mov temp, int_cnt
+	lsl temp
+    out PORTC, temp
     
     ;stack time
     pop temp
