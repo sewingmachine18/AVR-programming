@@ -1,7 +1,6 @@
 .include "m328PBdef.inc"
 .equ FOSC_MHZ = 16
-.equ del_ms = 100
-.equ del_int = 5
+.equ del_ms = 1000
 .equ del_nu = FOSC_MHZ*del_ms
 .def temp = r16
 .def temp2 = r17
