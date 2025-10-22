@@ -1,7 +1,7 @@
 .include "m328PBdef.inc"
 .equ FOSC_MHZ = 16
 .equ del_ms = 500
-.equ del_int = 5
+.equ del_int = 150
 .equ del_nu_int = FOSC_MHZ * del_int
 .equ del_nu = FOSC_MHZ*del_ms
 .def temp = r16
@@ -96,10 +96,12 @@ debounce:
     rcall delay_ms
     in temp, EIFR
     andi temp, (1<<INTF1)
+    cpi temp, 0
     brne debounce
   
     ;main isr
     in temp, PIND
+    com temp
     andi temp, 2    ;get PD1
     brne light	    ;if pd1==1 dont inc the int_counter
     
@@ -109,8 +111,8 @@ debounce:
     clr int_cnt
 
 light:
-	mov temp, int_cnt
-	lsl temp
+    mov temp, int_cnt
+    lsl temp
     out PORTC, temp
     
     ;stack time
