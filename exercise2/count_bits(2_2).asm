@@ -90,6 +90,7 @@ isr0:
     ;main isr
     clr cnt_bits
     in temp, PINB
+    com temp		    ; inverse logic input
     andi temp, 0b00011110  ;isolate pb1-pb4
     lsr temp
 bit1:
