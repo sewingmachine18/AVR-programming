@@ -14,7 +14,7 @@ ISR(INT1_vect){
     //debouncer
     do{
         EIFR = (1<<INT1);
-        _delay_ms(5);
+        _delay_ms(150);
     }while((EIFR & (1<<INT1)) != 0);
     
     if(count != 0)
