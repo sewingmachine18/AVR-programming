@@ -32,6 +32,9 @@ int main(){
     ADMUX = (1<<REFS0);
     ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
     
+    //wait for a mode to be selected
+    while( ((PIND & (1<<PD1)) == 0) && ((PIND & (1<<PD0)) == 0) );
+        
     while(1){
         
         //mode 1
