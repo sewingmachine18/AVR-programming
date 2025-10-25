@@ -37,18 +37,16 @@ reset:
     lpm dc_value, Z
     sts OCR1AL, dc_value
     sts OCR1AH, temp
-    
-    ;init step value
-    ldi step, 8
+
     
     
 main:
     in temp, PINB
     com temp
     mov temp2, temp
-    andi temp, 0b00100000
+    andi temp, 0b00010000
     breq increase
-    andi temp2, 0b00010000
+    andi temp2, 0b00100000
     brne main
     
 decrease:    
