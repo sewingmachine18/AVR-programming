@@ -47,6 +47,7 @@ int main(){
             if((PINB & 16) == 0)
                 if(step < 16){
                     dc_value = pwd[++step];
+                    OCR1AH = 0;
                     OCR1AL = dc_value;
                     _delay_ms(200);
                 }
@@ -55,6 +56,7 @@ int main(){
             if((PINB & 8) == 0)
                 if(step > 0){
                     dc_value = pwd[--step];
+                    OCR1AH = 0;
                     OCR1AL = dc_value;
                     _delay_ms(200);
                 }
