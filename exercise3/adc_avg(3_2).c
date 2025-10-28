@@ -1,5 +1,4 @@
 
-
 #include <stdio.h> 
 #include <stdlib.h>
 #define F_CPU 16000000UL
@@ -8,9 +7,9 @@
 #include<util/delay.h>
 
 
+int dc_value, step, counter = 0, avg = 0, temp;
+uint16_t input;
 
-int dc_value, step, counter = 0, temp;
-uint16_t input, avg=0;
 
 
 
@@ -40,14 +39,14 @@ int main(){
         
         PORTC = step;
         //check for brightness increase(PB4)
-        if((PINB & 16) == 0)
+        if((PINB & (1<<PB4)) == 0)
             if(step < 16){
                 dc_value = pwd[++step];
                 OCR1AL = dc_value;
             }
         
-        //check for brightness decrease(PB5)
-        if((PINB & 8) == 0)
+        //check for brightness decrease(PB3)
+        if((PINB & 1<<PB5))
             if(step > 0){
                 dc_value = pwd[--step];
                 OCR1AL = dc_value;
@@ -55,13 +54,13 @@ int main(){
         
         //delay and read from adc input
         _delay_ms(100);
-
-      //start conversion
+        
+        //start conversion
         ADCSRA |= (1 << ADSC);
     
-       //wait for conversion to complete
+        //wait for conversion to complete
         while (ADCSRA & (1 << ADSC));
-
+           
         input = ADC;
         avg += input;
         ++counter;
@@ -69,13 +68,13 @@ int main(){
         //after 16 loops show avg through portd
         if(counter == 16){
             counter = 0;
-            temp = (avg>>4);
-            if(temp <= 200) PORTD = 0x1;
+            temp == (avg>>4);
+            if(temp <= 200 && temp >= 0) PORTD = 0x1;
             if(temp <= 400 && temp > 200) PORTD = 0x2;
             if(temp <= 600 && temp > 400) PORTD = 0x4;
             if(temp <= 800 && temp > 600) PORTD = 0x8;
             if(temp > 800) PORTD = 0x10;    
-            avg = 0;
+            avg = 0;   
         }        
     }
         
