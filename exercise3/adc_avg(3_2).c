@@ -78,7 +78,7 @@ int main(){
         if(counter == 16){
             counter = 0;
             temp = (avg>>4);
-            if(temp <= 200 && temp > 0) PORTD = 0x1;
+            if(temp <= 200) PORTD = 0x1;
             if(temp <= 400 && temp > 200) PORTD = 0x2;
             if(temp <= 600 && temp > 400) PORTD = 0x4;
             if(temp <= 800 && temp > 600) PORTD = 0x8;
