@@ -22,7 +22,7 @@ reset:
     out SPH, temp
     
     ;set up TMR1A
-    ldi temp, (1<<CS12)|(1<<WGM12)
+    ldi temp, (1<<CS10)|(1<<WGM12)
     sts TCCR1B, temp
     ldi temp, (1<<WGM10)|(1<<COM1A1)
     sts TCCR1A, temp
