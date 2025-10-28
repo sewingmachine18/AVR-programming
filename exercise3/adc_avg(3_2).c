@@ -10,20 +10,7 @@
 
 
 int dc_value, step, counter = 0, temp;
-long avg = 0;
-uint16_t input;
-
-uint16_t read_adc(){
-  
-    //start conversion
-    ADCSRA |= (1 << ADSC);
-    
-    //wait for conversion to complete
-    while (ADCSRA & (1 << ADSC));
-    
-    //read results
-    return ADC;
-}
+uint16_t input, avg=0;
 
 
 
@@ -57,7 +44,6 @@ int main(){
             if(step < 16){
                 dc_value = pwd[++step];
                 OCR1AL = dc_value;
-                _delay_ms(200);
             }
         
         //check for brightness decrease(PB5)
@@ -65,12 +51,18 @@ int main(){
             if(step > 0){
                 dc_value = pwd[--step];
                 OCR1AL = dc_value;
-                _delay_ms(200);
             }
         
         //delay and read from adc input
         _delay_ms(100);
-        input = read_adc();
+
+      //start conversion
+        ADCSRA |= (1 << ADSC);
+    
+       //wait for conversion to complete
+        while (ADCSRA & (1 << ADSC));
+
+        input = ADC;
         avg += input;
         ++counter;
         
