@@ -22,11 +22,12 @@ int main(){
     //set up ports
     DDRB = 0x2;
     DDRD = 0xFF;
-    DDRC = 0xFF;
+    DDRC = 0x0;
     
     //create table and initialize duty cycle
     int pwd[] = {5, 20, 36, 51, 67, 82, 97, 113, 128, 143, 159, 174, 189, 205, 220, 236, 251};
     step = 8;
+    PORTC = step;
     dc_value = pwd[step];
     OCR1AL = dc_value;
     OCR1AH = 0;
@@ -37,7 +38,6 @@ int main(){
     
     while(1){
         
-        PORTC = step;
         //check for brightness increase(PB4)
         if((PINB & (1<<PB4)) == 0)
             if(step < 16){
@@ -46,7 +46,7 @@ int main(){
             }
         
         //check for brightness decrease(PB3)
-        if((PINB & 1<<PB5))
+        if((PINB & (1<<PB3)) == 0)
             if(step > 0){
                 dc_value = pwd[--step];
                 OCR1AL = dc_value;
@@ -62,19 +62,24 @@ int main(){
         while (ADCSRA & (1 << ADSC));
            
         input = ADC;
-        avg += input;
+        temp += input;
         ++counter;
         
         //after 16 loops show avg through portd
         if(counter == 16){
             counter = 0;
-            temp == (avg>>4);
-            if(temp <= 200 && temp >= 0) PORTD = 0x1;
-            if(temp <= 400 && temp > 200) PORTD = 0x2;
-            if(temp <= 600 && temp > 400) PORTD = 0x4;
-            if(temp <= 800 && temp > 600) PORTD = 0x8;
-            if(temp > 800) PORTD = 0x10;    
-            avg = 0;   
+            avg = (temp>>4);
+            if(avg <= 200 && avg >= 0) 
+                PORTD = 0x1;
+            else if(avg <= 400) 
+                PORTD = 0x2;
+            else if(avg <= 600) 
+                PORTD = 0x4;
+            else if(avg <= 800) 
+                PORTD = 0x8;
+            else
+                PORTD = 0x10;    
+            temp = 0;   
         }        
     }
         
