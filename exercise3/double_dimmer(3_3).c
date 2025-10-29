@@ -8,7 +8,7 @@
 
 
 int dc_value, step, temp;
-uint8_t low, high;
+uint8_t adc_in;
 
 
 int main(){
@@ -20,7 +20,7 @@ int main(){
     //set up ports
     DDRB = 0x2;
     DDRD = 0x0;
-    DDRC = 0xFF;
+    DDRC = 0x0;
     
     //create table and initialize duty cycle
     int pwd[] = {5, 20, 36, 51, 67, 82, 97, 113, 128, 143, 159, 174, 189, 205, 220, 236, 251};
@@ -47,16 +47,14 @@ int main(){
             if((PINB & 16) == 0)
                 if(step < 16){
                     dc_value = pwd[++step];
-                    OCR1AH = 0;
                     OCR1AL = dc_value;
                     _delay_ms(200);
                 }
 
-            //check for brightness decrease(PB5)
+            //check for brightness decrease(PB3)
             if((PINB & 8) == 0)
                 if(step > 0){
                     dc_value = pwd[--step];
-                    OCR1AH = 0;
                     OCR1AL = dc_value;
                     _delay_ms(200);
                 }
@@ -69,11 +67,11 @@ int main(){
             ADCSRA |= (1 << ADSC);
     
             //wait for conversion to complete
-            while (ADCSRA & (1 << ADSC));
+            while (ADCSRA & 0x40);
 
-            //read n write results
-            low  = ADCL; high = ADCH; 
-            OCR1AL = low; OCR1AH = high;
+            //read n' write results
+            adc_in = ADCH;
+            OCR1AL = adc_in;
         } 
         
     }
