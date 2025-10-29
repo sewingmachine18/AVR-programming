@@ -19,13 +19,13 @@ int main(){
     
     //set up ports
     DDRB = 0x2;
-    DDRD = 0x0;
+    DDRD = 0xFF-0x3;
     DDRC = 0x0;
     
     //create table and initialize duty cycle
     int pwd[] = {5, 20, 36, 51, 67, 82, 97, 113, 128, 143, 159, 174, 189, 205, 220, 236, 251};
     step = 8;
-    PORTC = step;
+    PORTD = step<<2;
     dc_value = pwd[step];
     OCR1AL = dc_value;
     OCR1AH = 0;
@@ -42,7 +42,7 @@ int main(){
         //mode 1
         while((PIND & 0x2) != 0){ 
             
-            PORTC = step;
+            PORTD = step<<2;
             //check for brightness increase(PB4)
             if((PINB & 16) == 0)
                 if(step < 16){
@@ -67,12 +67,17 @@ int main(){
             ADCSRA |= (1 << ADSC);
     
             //wait for conversion to complete
-            while (ADCSRA & 0x40);
+            while (ADCSRA & 0x40)
+                adc_in = 0;
+            adc_in = 0;
 
             //read n' write results
             adc_in = ADCH;
             OCR1AL = adc_in;
-        } 
+        }
+        
+        dc_value = pwd[step];
+        OCR1AL = dc_value;
         
     }
         
