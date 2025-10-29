@@ -40,11 +40,11 @@ int main(){
     while(1){
         
         //mode 1
-        while((PIND & 0x2) != 0){ 
+        while((PIND & (1<<PD1)) != 0){ 
             
             PORTD = step<<2;
             //check for brightness increase(PB4)
-            if((PINB & 16) == 0)
+            if((PINB & (1<<PB4)) == 0)
                 if(step < 16){
                     dc_value = pwd[++step];
                     OCR1AL = dc_value;
@@ -52,7 +52,7 @@ int main(){
                 }
 
             //check for brightness decrease(PB3)
-            if((PINB & 8) == 0)
+            if((PINB & (1<<PB3)) == 0)
                 if(step > 0){
                     dc_value = pwd[--step];
                     OCR1AL = dc_value;
@@ -61,7 +61,7 @@ int main(){
         }
         
         //mode 2
-        while((PIND & 0x1) != 0){
+        while((PIND & (1<<PD0)) != 0){
             
             //start conversion
             ADCSRA |= (1 << ADSC);
