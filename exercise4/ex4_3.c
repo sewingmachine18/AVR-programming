@@ -5,7 +5,7 @@
 #include<avr/interrupt.h>
 #include<util/delay.h>
 
-volatile int input, leds, cnt, flag;
+volatile int local_input = 0, input = 0, leds = 0, counter = 0, flag = 0;
 
 void write_nibbles(uint8_t number) {
     
@@ -23,7 +23,7 @@ void write_nibbles(uint8_t number) {
     
     //send low nibble
     num = number;
-    num << 4;  
+    num <<= 4;  
     num &= 0xF0;
     num += temp;
     
@@ -113,49 +113,21 @@ void lcd_init() {
 }
 
 ISR(ADC_vect){
-    input = ADC;
-    counter = 10;
+    local_input = ADC;
+    counter = 2;
     
-    if(ADC <= 170) leds = 0x01;
-    else if(ADC <=340) leds = 0x3;
-    else if(ADC <= 510) leds = 0x7;
-    else if(ADC <= 680) leds = 0xF;
-    else if(ADC <= 850) leds = 0x1F;
-    else leds = 0x3F; 
-        
-    if(input >= 403 && flag == 0){
-        lcd_clear_display();
-        flag = 1;
-        lcd_data(0x47); //G
-        lcd_data(0x41); //A
-        lcd_data(0x53); //S
-        lcd_data(0x20); //' '
-        lcd_data(0x44); //D
-        lcd_data(0x45); //E
-        lcd_data(0x54); //T
-        lcd_data(0x45); //E
-        lcd_data(0x43); //C
-        lcd_data(0x54); //T
-        lcd_data(0x45); //E
-        lcd_data(0x44); //D
-    }
-    else if(input < 403 && flag == 1){
-        flag = 0;
-        lcd_clear_display();
-        lcd_data(0x43); //C
-        lcd_data(0x4C); //L
-        lcd_data(0x45); //E
-        lcd_data(0x41); //A
-        lcd_data(0x52); //R
-    }
-        
-    
+    if(local_input <= 170) leds = 0x01;
+    else if(local_input <=340) leds = 0x3;
+    else if(local_input <= 510) leds = 0x7;
+    else if(local_input <= 680) leds = 0xF;
+    else if(local_input <= 850) leds = 0x1F;
+    else leds = 0x3F;    
 }
 
 
 
-int main(){
-    int main(int argc, char** argv) {
+
+int main(int argc, char** argv) {
 //setup ports
     DDRD = 0xFF;
     DDRC = 0x00;
@@ -171,15 +143,49 @@ int main(){
     
     while(1){
         while(counter>0){
-            _delay_ms(10);
+            _delay_ms(50);
             --counter;
             if( (flag == 1) && (counter%2 == 1)){
                PORTB = 0;
             }
             else PORTB = leds;
         }
-        if(!(ADCSRA &= (1<<ADSC)) 
-                (ADCSRA |= (1<<ADSC);
+        if(!(ADCSRA & (1<<ADSC))) 
+                ADCSRA |= (1<<ADSC);
+        
+        cli();
+        input = local_input;
+        sei();
+        
+        if(input >= 403 && flag == 0){
+            lcd_clear_display();
+            flag = 1;
+            lcd_data(0x47); //G
+            lcd_data(0x41); //A
+            lcd_data(0x53); //S
+            lcd_data(0x20); //' '
+            lcd_data(0x44); //D
+            lcd_data(0x45); //E
+            lcd_data(0x54); //T
+            lcd_data(0x45); //E
+            lcd_data(0x43); //C
+            lcd_data(0x54); //T
+            lcd_data(0x45); //E
+            lcd_data(0x44); //D
+        }
+        else if(input < 403 && flag == 1){
+            flag = 0;
+            lcd_clear_display();
+            lcd_data(0x43); //C
+            lcd_data(0x4C); //L
+            lcd_data(0x45); //E
+            lcd_data(0x41); //A
+            lcd_data(0x52); //R
+        }
+        
     }
+    
+    return (EXIT_SUCCESS);
 }
+
 
