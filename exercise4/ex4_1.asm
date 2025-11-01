@@ -65,7 +65,6 @@ reset:
 ;--------------------------------------------
 ;loop for reading voltage (main function)
 main:
-    
     rjmp main
   
     
@@ -239,9 +238,7 @@ isr_ADC:	;we will calculate (ADC*Vref*100)/1024 = (ADC*125)/256 in order to have
     adc mul_res2, r1	;result in mul_res2:mul_res1
     
     rcall lcd_clear_display ;clear previous reading
-    ldi r24, low(100)
-    ldi r25, high(100)
-    rcall wait_msec
+   
     
     ;begin bcd transform
     ;hundreds
@@ -260,15 +257,10 @@ find_hundreds:
     ldi r24, 0x30	;print hundreds
     or r24, digit
     rcall lcd_data  
-    ldi r24, low(100)
-    ldi r25, high(100)
-    rcall wait_msec
     
     ldi r24, 0x2E	;print '.'
     rcall lcd_data  
-    ldi r24, low(100)
-    ldi r25, high(100)
-    rcall wait_msec
+
     
     ;decades
     ldi temp, 10
@@ -286,9 +278,6 @@ find_decades:
     ldi r24, 0x30	;print decades
     or r24, digit
     rcall lcd_data  
-    ldi r24, low(100)
-    ldi r25, high(100)
-    rcall wait_msec
     
     ;units
     ldi temp, 1
@@ -305,11 +294,7 @@ find_units:
     
     ldi r24, 0x30	;print units
     or r24, digit
-    rcall lcd_data  
-    ldi r24, low(100)
-    ldi r25, high(100)
-    rcall wait_msec
-   
+    rcall lcd_data 
     
     lds temp, ADCSRA	;start conversation
     ori temp, (1<<ADSC)
