@@ -23,7 +23,7 @@ void write_nibbles(uint8_t number) {
     
     //send low nibble
     num = number;
-    num << 4;  
+    num <<= 4;  
     num &= 0xF0;
     num += temp;
     
@@ -125,8 +125,10 @@ int main(int argc, char** argv) {
         ADCSRA |= (1<<ADSC);
         while(ADCSRA & (1<<ADSC));
         input = ADC;
-        input = ADC *125;
-        input >> 8;
+        input *= 125;
+        input >>= 8;
+        
+        lcd_clear_display();
         
         //hundreds
         int digit = -1;
@@ -137,12 +139,10 @@ int main(int argc, char** argv) {
         input += 100;
         
         //display hundreds
-        lcd_data(digit);
-        _delay_ms(100);
+        lcd_data(digit + '0');
         
         //display '.'
         lcd_data(0x2E);
-        _delay_ms(100);
         
         //decades
         digit = -1;
@@ -153,8 +153,7 @@ int main(int argc, char** argv) {
         input += 10;
         
         //display decades
-        lcd_data(digit);
-        _delay_ms(100);
+        lcd_data(digit + '0');
         
         //units
         digit = -1;
@@ -165,8 +164,9 @@ int main(int argc, char** argv) {
         input += 1;
         
         //display units
-        lcd_data(digit);
-        _delay_ms(100); 
+        lcd_data(digit + '0'); 
+        
+        _delay_ms(1000);
         
     }
     
