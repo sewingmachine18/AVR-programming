@@ -174,6 +174,7 @@ int main(int argc, char** argv) {
         //display units
         digit |= 0x30;
         lcd_data(digit); 
+        lcd_data('V');
         
         _delay_ms(1000);
         
