@@ -295,6 +295,8 @@ find_units:
     ldi r24, 0x30	;print units
     or r24, digit
     rcall lcd_data 
+    ldi r24, 'V'
+    rcall lcd_data
     
     lds temp, ADCSRA	;start conversation
     ori temp, (1<<ADSC)
