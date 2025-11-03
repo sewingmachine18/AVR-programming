@@ -6,6 +6,7 @@
 #include<util/delay.h>
 
 int input;
+uint8_t low, high;
 
 void write_nibbles(uint8_t number) {
     
@@ -113,10 +114,15 @@ void lcd_init() {
 }
 
 int main(int argc, char** argv) {
+
+    uint8_t digit = 0;
 //setup ports
     DDRD = 0xFF;
+    DDRB = 0xFF;
     DDRC = 0x00;
-    
+
+//init lcd
+    lcd_init();
 //ADC setup
     ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX1);
     ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
@@ -124,28 +130,33 @@ int main(int argc, char** argv) {
     while(1){
         ADCSRA |= (1<<ADSC);
         while(ADCSRA & (1<<ADSC));
-        input = ADC;
+        input = 0;
+        low = ADCL;
+        high = ADCH;
+        input = low | (high<<8);
         input *= 125;
         input >>= 8;
         
         lcd_clear_display();
         
         //hundreds
-        int digit = -1;
+        digit = 0xFF;
         while(input >= 0){
+            digit += 1;
             input -= 100;
-            ++digit;
         }
         input += 100;
         
         //display hundreds
-        lcd_data(digit + '0');
+        PORTB = digit;
+        digit |= 0x30;
+        lcd_data(digit);
         
         //display '.'
         lcd_data(0x2E);
         
         //decades
-        digit = -1;
+        digit = 0xFF;
         while(input >= 0){
             input -= 10;
             ++digit;
@@ -153,10 +164,12 @@ int main(int argc, char** argv) {
         input += 10;
         
         //display decades
-        lcd_data(digit + '0');
+        PORTB = digit;
+        digit |= 0x30;
+        lcd_data(digit);
         
         //units
-        digit = -1;
+        digit = 0xFF;
         while(input >= 0){
             input -= 1;
             ++digit;
@@ -164,7 +177,9 @@ int main(int argc, char** argv) {
         input += 1;
         
         //display units
-        lcd_data(digit + '0'); 
+        PORTB = digit;
+        digit |= 0x30;
+        lcd_data(digit); 
         
         _delay_ms(1000);
         
@@ -172,6 +187,3 @@ int main(int argc, char** argv) {
     
     return (EXIT_SUCCESS);
 }
-
-
-
