@@ -5,8 +5,8 @@
 #include<avr/interrupt.h>
 #include<util/delay.h>
 
-int input;
-uint8_t low, high;
+long input;
+
 
 void write_nibbles(uint8_t number) {
     
@@ -130,13 +130,10 @@ int main(int argc, char** argv) {
     while(1){
         ADCSRA |= (1<<ADSC);
         while(ADCSRA & (1<<ADSC));
-        input = 0;
-        low = ADCL;
-        high = ADCH;
-        input = low | (high<<8);
+        input = ADC;
         input *= 125;
         input >>= 8;
-        
+                
         lcd_clear_display();
         
         //hundreds
@@ -148,7 +145,6 @@ int main(int argc, char** argv) {
         input += 100;
         
         //display hundreds
-        PORTB = digit;
         digit |= 0x30;
         lcd_data(digit);
         
@@ -164,7 +160,6 @@ int main(int argc, char** argv) {
         input += 10;
         
         //display decades
-        PORTB = digit;
         digit |= 0x30;
         lcd_data(digit);
         
@@ -177,7 +172,6 @@ int main(int argc, char** argv) {
         input += 1;
         
         //display units
-        PORTB = digit;
         digit |= 0x30;
         lcd_data(digit); 
         
