@@ -298,11 +298,11 @@ find_units:
     ldi r24, 'V'
     rcall lcd_data
     
-    lds temp, ADCSRA	;start conversation
-    ori temp, (1<<ADSC)
-    sts ADCSRA, temp
     ldi r24, low(1000)	    ; wait 1 second
     ldi r25, high(1000)
     rcall wait_msec
     
+    lds temp, ADCSRA	;start conversation
+    ori temp, (1<<ADSC)
+    sts ADCSRA, temp    
     reti
