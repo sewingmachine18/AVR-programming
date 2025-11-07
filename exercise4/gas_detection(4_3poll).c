@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
         else leds = 0x3F;   
 
         
-        if(local_input >= 403 && flag == 0){
+        if(local_input >= 219 && flag == 0){
             lcd_clear_display();
             flag = 1;
             lcd_data('G'); //G
@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
             lcd_data(0x45); //E
             lcd_data(0x44); //D
         }
-        else if(local_input < 403 && flag == 1){
+        else if(local_input < 219 && flag == 1){
             flag = 0;
             lcd_clear_display();
             lcd_data(0x43); //C
