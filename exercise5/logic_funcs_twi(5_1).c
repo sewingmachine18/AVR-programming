@@ -97,9 +97,9 @@ unsigned char twi_write( unsigned char data )
 	
 	// wait until transmission completed
 	while(!(TWCR0 & (1<<TWINT)));
-    
-	if( (TW_STATUS & 0xF8) != TW_MT_DATA_ACK) 
-        return 1;
+	
+	if( (TW_STATUS & 0xF8) != TW_MT_DATA_ACK)
+	return 1;
 	return 0;
 }
 
@@ -125,35 +125,35 @@ void PCA9555_0_write(PCA9555_REGISTERS reg, uint8_t value)
 uint8_t A, B, Bn, C, D, temp, f0, f1, res;
 
 int main(void){
-    
-    //init and configure twi
-    twi_init();
-    PCA9555_0_write(REG_CONFIGURATION_0, 0x00); //Set EXT_PORT0 as output    
-    
+	
+	//init and configure twi
+	twi_init();
+	PCA9555_0_write(REG_CONFIGURATION_0, 0x00); //Set EXT_PORT0 as output
+	
 	//setup ports
 	DDRB = 0x00;
 	DDRD = 0xFF;
 	while(1){
-        //configure input
-        temp = PINB;
-        A = temp & (1<<PB0);
-        B = temp & (1<<PB1);
-        B = B >> 1;
-        Bn = ~B & (1<<PB1);
-        C = temp & (1<<PB2);
-        B = B >> 2;
-        D = temp & (1<<PB3);
-        D = D >> 3;
-        
-        //calculate functions
-        f0 = ~( (A & Bn) | (C & B & D) );
-        f1 = ( (A | C) & (B & D) );
-        f1 <<= f1;
-        res = f0 | f1;
-                
-        //create output
-        PCA9555_0_write(REG_OUTPUT_0, res);
-    }
+		//configure input
+		temp = PINB;
+		A = temp & (1<<PB0);
+		B = temp & (1<<PB1);
+		B = B >> 1;
+		Bn = ~B & (1<<PB0);
+		C = temp & (1<<PB2);
+		C = C >> 2;
+		D = temp & (1<<PB3);
+		D = D >> 3;
+		
+		//calculate functions
+		f0 = ~( (A & Bn) | (C & B & D) );
+		f1 = ( (A | C) & (B & D) );
+		f1 <<= 1;
+		res = f0 | f1;
+		
+		//create output
+		PCA9555_0_write(REG_OUTPUT_0, res);
+	}
 	
-    return 0;	
+	return 0;
 }
