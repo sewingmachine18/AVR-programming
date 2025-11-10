@@ -192,25 +192,28 @@ int main(){
 	twi_init();
 	PCA9555_0_write(REG_CONFIGURATION_0, 0x00); //Set EXT_PORT0 as output
 	PCA9555_0_write(REG_CONFIGURATION_1, 0xF0); //Set EXT_PORT1 as output/input
-	PCA9555_0_write(REG_OUTPUT_1, 0x08); //Set IO1_3 high
+	PCA9555_0_write(REG_OUTPUT_1, 0x07); //Set IO1_3 high
 		
 	//setup ports
 	DDRB = 0x00;
+	DDRC = 0xFF;
 	DDRD = 0xFF;
 	
 	while(1){
 		input = PCA9555_0_read(REG_INPUT_1);
 		temp = input&0xF0;
 		
-		if(temp == 0x10)
+		if((temp&0x10) == 0)
 			PCA9555_0_write(REG_OUTPUT_0, 1);
-		else if(temp == 0x20)
+		else if((temp&0x20) == 0)
 			PCA9555_0_write(REG_OUTPUT_0, 2);
-		else if(temp == 0x40)
+		else if((temp&0x40) == 0)
 			PCA9555_0_write(REG_OUTPUT_0, 4);
-		else if(temp == 0x80)
+		else if((temp&0x80) == 0)
 			PCA9555_0_write(REG_OUTPUT_0, 8);
 		else PCA9555_0_write(REG_OUTPUT_0, 0);	
+		
+		PORTC = temp;
 	}
 	
 	return 0;
