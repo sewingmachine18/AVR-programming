@@ -245,11 +245,11 @@ int scan_keypad_rising_edge(){
 
 char ascii[] = {0, '1', '2', '3', 'A', '4', '5', '6', 'B', '7', '8', '9', 'C', '*', '0', '#', 'D'};
 	
-void keypad_to_ascii(int key){
+char keypad_to_ascii(int key){
 	int pos = 0;
 	while(key != 0){
 		++pos;
-		key >> 1;
+		key >>= 1;
 	}
 	return ascii[pos];
 }
@@ -272,4 +272,3 @@ int main(){
 	}
 	return 0;
 }
-
