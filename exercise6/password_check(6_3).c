@@ -254,7 +254,6 @@ char keypad_to_ascii(int key){
 }
 
 int main(){
-	
 	//init core configurations
 	twi_init();
 	PCA9555_0_write(REG_CONFIGURATION_1, 0xF0);
@@ -263,15 +262,15 @@ int main(){
 	
     while(1){
         
-        while(key = scan_keypad_rising_edge() == 0); //wait for first input
+        while((key = scan_keypad_rising_edge()) == 0); //wait for first input
         n1 = key;
-        while(key = scan_keypad_rising_edge() == 0); //wait for second input
+        while((key = scan_keypad_rising_edge()) == 0); //wait for second input
         n2 = key;
         
         //wrong input -> blink for 6 sec
-        if( (n1 != 0x4000) & (n2 != 4)){        
+        if( (n1 != 0x2000) || (n2 != 4)){        
             for(cnt = 12; cnt > 0; --cnt){
-                if(cnt%2 == 0) PORTB = 0xFF;
+                if(cnt%2 == 0) PORTB = 0x3F;
                 else PORTB = 0x00;
                 _delay_ms(500);
             }
@@ -279,7 +278,7 @@ int main(){
         }
         //right input -> leds on for 3 sec
         else{
-            PORTB = 0xFF;
+            PORTB = 0x3F;
             _delay_ms(3000);
             PORTB = 0;
             _delay_ms(2000); //complete the 5 sec 
