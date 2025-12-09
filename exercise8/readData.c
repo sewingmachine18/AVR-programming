@@ -691,6 +691,5 @@ int main(){
     }
     
     out:
-    key = 5;
     return 0;
 }
